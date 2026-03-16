@@ -72,16 +72,6 @@ public class Principal {
         } else if (Verificador.sonDisjuntos(A, B)) {
             System.out.println("Rectángulos A y B son disjuntos.");
         }
-
-        // --- Prueba de ContainerRect ---
-        System.out.println("\n--- Almacenando rectángulos en ContainerRect ---");
-        ContainerRect contenedor = new ContainerRect(5); // Capacidad para 5
-        contenedor.addRectangulo(A);
-        contenedor.addRectangulo(B);
-        
-        System.out.println(contenedor.toString());
-        System.out.println("Total de rectángulos guardados: " + ContainerRect.numRec);
-
         sc.close();
     }
 }
