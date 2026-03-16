@@ -1,0 +1,105 @@
+***********************************************************************
+Nombre del código: AnalizadorMinero.js
+Autor del Código: Moscoso Flores Marcelo Rodrigo
+Fecha: 11/03/2026 
+***********************************************************************
+
+class AnalizadorMinero {
+   
+    static encontrarRegionMasValiosa(terreno, k) {
+        const filas = terreno.getFilas();
+        const columnas = terreno.getColumnas();
+       
+        if (k > filas || k > columnas) {
+            throw new Error(`El tamaño de subregión (${k}) no puede ser mayor que las dimensiones del terreno (${filas}x${columnas})`);
+        }
+       
+        let maxValor = -1;
+        let mejorFila = -1;
+        let mejorColumna = -1;
+        let mejorRegion = [];
+       
+        for (let i = 0; i <= filas - k; i++) {
+            for (let j = 0; j <= columnas - k; j++) {
+                const resultado = this.analizarSubregion(terreno, i, j, k);
+               
+                if (resultado.valorTotal > maxValor) {
+                    maxValor = resultado.valorTotal;
+                    mejorFila = i;
+                    mejorColumna = j;
+                    mejorRegion = resultado.zonas;
+                }
+            }
+        }
+       
+        return {
+            valorTotal: maxValor,
+            filaInicio: mejorFila,
+            columnaInicio: mejorColumna,
+            tamanio: k,
+            zonas: mejorRegion,
+            mineralPredominante: this.encontrarMineralPredominante(mejorRegion)
+        };
+    }
+   
+    static analizarSubregion(terreno, filaInicio, columnaInicio, k) {
+        const zonas = [];
+        let valorTotal = 0;
+       
+        for (let i = 0; i < k; i++) {
+            for (let j = 0; j < k; j++) {
+                const zona = terreno.getZona(filaInicio + i, columnaInicio + j);
+                if (zona) {
+                    zonas.push(zona);
+                    valorTotal += zona.calcularValorEconomico();
+                }
+            }
+        }
+       
+        return {
+            zonas: zonas,
+            valorTotal: valorTotal
+        };
+    }
+   
+    static encontrarMineralPredominante(zonas) {
+        const conteo = {};
+       
+        for (const zona of zonas) {
+            const tipo = zona.getTipoMineral();
+            conteo[tipo] = (conteo[tipo] || 0) + 1;
+        }
+       
+        let maxFrecuencia = 0;
+        let mineralPredominante = "";
+       
+        for (const [tipo, frecuencia] of Object.entries(conteo)) {
+            if (frecuencia > maxFrecuencia) {
+                maxFrecuencia = frecuencia;
+                mineralPredominante = tipo;
+            }
+        }
+       
+        return mineralPredominante;
+    }
+   
+    static mostrarResultados(resultado) {
+        console.log("\n" + "=".repeat(50));
+        console.log("REGION MÁS VALIOSA ENCONTRADA:");
+        console.log("=".repeat(50));
+        console.log(`Posición inicial: (${resultado.filaInicio + 1}, ${resultado.columnaInicio + 1})`);
+        console.log(`Tamaño de la región: ${resultado.tamanio} x ${resultado.tamanio}`);
+        console.log("\nZonas analizadas:");
+       
+        resultado.zonas.forEach(zona => {
+            console.log(`  ${zona.toString()}`);
+        });
+       
+        console.log(`\nValor total estimado: ${resultado.valorTotal.toFixed(2)}`);
+        console.log(`Mineral predominante en la región: ${resultado.mineralPredominante}`);
+        console.log("=".repeat(50));
+    }
+}
+
+module.exports = AnalizadorMinero;
+
