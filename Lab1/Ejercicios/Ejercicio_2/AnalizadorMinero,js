@@ -1,9 +1,3 @@
-***********************************************************************
-Nombre del código: AnalizadorMinero.js
-Autor del Código: Moscoso Flores Marcelo Rodrigo
-Fecha: 11/03/2026 
-***********************************************************************
-
 class AnalizadorMinero {
    
     static encontrarRegionMasValiosa(terreno, k) {
